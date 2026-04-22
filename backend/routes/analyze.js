@@ -15,7 +15,7 @@ function sanitizeProfile(raw) {
     gender: ['male', 'female', 'other'].includes(raw.gender) ? raw.gender : 'other',
     annualIncome: Number(raw.annualIncome) || 0,
     occupation: raw.occupation || 'other',
-    category: ['general', 'obc', 'sc', 'st'].includes((raw.category || '').toLowerCase()) ? raw.category.toLowerCase() : 'general',
+    category: raw.category && ['general', 'obc', 'sc', 'st'].includes(raw.category.toLowerCase()) ? raw.category.toLowerCase() : 'general',
     state: raw.state || 'Delhi',
     familySize: Number(raw.familySize) || 1,
     hasDisability: Boolean(raw.hasDisability),

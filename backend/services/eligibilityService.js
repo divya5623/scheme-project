@@ -44,8 +44,6 @@ function checkEligibility(userProfile, scheme) {
     } else {
       missingCriteria.push(`Scheme is for ${e.gender} applicants only`);
     }
-  } else {
-    score += 10;
   }
 
   // --- Income check ---
@@ -57,8 +55,6 @@ function checkEligibility(userProfile, scheme) {
     } else {
       missingCriteria.push(`Maximum annual income allowed: ₹${e.maxAnnualIncome.toLocaleString('en-IN')} (your income: ₹${userProfile.annualIncome.toLocaleString('en-IN')})`);
     }
-  } else {
-    score += 10;
   }
 
   // --- Occupation check ---
@@ -71,8 +67,6 @@ function checkEligibility(userProfile, scheme) {
     } else {
       missingCriteria.push(`Required occupation: ${e.occupation.join(' or ')} (your occupation: ${userProfile.occupation})`);
     }
-  } else {
-    score += 10;
   }
 
   // --- Category check ---
@@ -86,8 +80,6 @@ function checkEligibility(userProfile, scheme) {
     } else {
       missingCriteria.push(`Scheme is restricted to: ${e.category.join(', ')} categories (your category: ${userProfile.category})`);
     }
-  } else {
-    score += 10;
   }
 
   // --- BPL check ---
@@ -134,8 +126,6 @@ function checkEligibility(userProfile, scheme) {
     } else {
       missingCriteria.push(`Scheme is only available in: ${e.states.join(', ')} (your state: ${userProfile.state})`);
     }
-  } else {
-    score += 5;
   }
 
   // --- Scheme-specific bonus scoring (contextual relevance) ---

@@ -76,9 +76,9 @@ function checkEligibility(userProfile, scheme) {
     const schemeCategoriesNormalized = e.category.map((c) => c.toUpperCase());
     if (schemeCategoriesNormalized.includes(userCategoryNormalized)) {
       score += 10;
-      reasons.push(`Category "${userProfile.category}" matches scheme eligibility`);
+      reasons.push(`Category "${userCategoryNormalized}" matches scheme eligibility`);
     } else {
-      missingCriteria.push(`Scheme is restricted to: ${e.category.join(', ')} categories (your category: ${userProfile.category})`);
+      missingCriteria.push(`Scheme is restricted to: ${e.category.join(', ')} categories (your category: ${userCategoryNormalized})`);
     }
   }
 
@@ -91,8 +91,6 @@ function checkEligibility(userProfile, scheme) {
     } else {
       missingCriteria.push('Scheme requires Below Poverty Line (BPL) status');
     }
-  } else {
-    score += 5;
   }
 
   // --- Disability check ---

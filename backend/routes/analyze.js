@@ -10,24 +10,38 @@ const { analyzeEligibility } = require('../services/aiService');
  * Sanitize the user profile — remove unexpected fields and apply defaults.
  */
 function sanitizeProfile(raw) {
+  const occupation = raw.occupation || 'other';
+  // Support both bplCardHolder (form field) and isBPL (direct API usage)
+  const isBPL = Boolean(raw.isBPL || raw.bplCardHolder);
+  // Support both isPregnant and isPregnantOrNewMother (form field)
+  const isPregnant = Boolean(raw.isPregnant || raw.isPregnantOrNewMother);
+  // Support maritalStatus string or isMarried boolean
+  const isMarried = Boolean(raw.isMarried) || raw.maritalStatus === 'married';
+  // isStudent inferred from occupation if not explicitly set
+  const isStudent = Boolean(raw.isStudent) || occupation === 'student';
+  // hasLand: explicit flag or inferred from landArea being provided
+  const landArea = Number(raw.landArea) || 0;
+  const hasLand = Boolean(raw.hasLand) || (occupation === 'farmer' && landArea > 0);
+
   return {
+    name: raw.name || '',
     age: Number(raw.age) || 25,
     gender: ['male', 'female', 'other'].includes(raw.gender) ? raw.gender : 'other',
     annualIncome: Number(raw.annualIncome) || 0,
-    occupation: raw.occupation || 'other',
+    occupation,
     category: raw.category && ['general', 'obc', 'sc', 'st'].includes(raw.category.toLowerCase()) ? raw.category.toLowerCase() : 'general',
     state: raw.state || 'Delhi',
     familySize: Number(raw.familySize) || 1,
     hasDisability: Boolean(raw.hasDisability),
-    isBPL: Boolean(raw.isBPL),
-    isStudent: Boolean(raw.isStudent),
-    hasLand: Boolean(raw.hasLand),
-    landArea: Number(raw.landArea) || 0,
+    isBPL,
+    isStudent,
+    hasLand,
+    landArea,
     hasExistingBusiness: Boolean(raw.hasExistingBusiness),
     wantsToStartBusiness: Boolean(raw.wantsToStartBusiness),
-    isPregnant: Boolean(raw.isPregnant),
-    hasBankAccount: Boolean(raw.hasBankAccount),
-    isMarried: Boolean(raw.isMarried),
+    isPregnant,
+    hasBankAccount: raw.hasBankAccount === undefined ? true : Boolean(raw.hasBankAccount),
+    isMarried,
     numberOfDaughters: Number(raw.numberOfDaughters) || 0,
   };
 }
@@ -77,7 +91,7 @@ router.post('/', async (req, res, next) => {
       success: true,
       userProfile,
       eligibleSchemes,
-      ineligibleSchemes: ineligibleSchemes.slice(0, 5), // top 5 near-misses
+      nearMisses: ineligibleSchemes.slice(0, 5),
       aiAnalysis,
     });
   } catch (err) {

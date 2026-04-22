@@ -1,8 +1,10 @@
 export default function ApplicationGuide({ scheme }) {
-  const docs = scheme.requiredDocuments || scheme.documents || []
-  const steps = scheme.applicationProcess || scheme.steps || []
-  const tips = scheme.keyTips || scheme.tips || []
-  const website = scheme.officialWebsite || scheme.website || ''
+  const docs = scheme.documents || []
+  // applicationProcess is array of { step, title, description } objects
+  const steps = (scheme.applicationProcess || []).map((s) =>
+    typeof s === 'string' ? s : `${s.title ? s.title + ': ' : ''}${s.description || ''}`
+  )
+  const website = scheme.officialLink || scheme.officialWebsite || scheme.website || ''
 
   return (
     <div className="mt-3 border border-blue-100 rounded-xl overflow-hidden animate-slide-up">
@@ -48,23 +50,6 @@ export default function ApplicationGuide({ scheme }) {
           </div>
         )}
 
-        {/* Key Tips */}
-        {tips.length > 0 && (
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-              💡 Key Tips
-            </p>
-            <ul className="space-y-1.5">
-              {tips.map((tip, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                  <span className="text-yellow-500 flex-shrink-0">💡</span>
-                  <span>{tip}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
         {/* Official Website */}
         {website && (
           <a
@@ -79,7 +64,7 @@ export default function ApplicationGuide({ scheme }) {
           </a>
         )}
 
-        {!docs.length && !steps.length && !tips.length && !website && (
+        {!docs.length && !steps.length && !website && (
           <p className="text-sm text-gray-500 text-center py-4">
             Application guide details not available. Please visit the official government portal.
           </p>

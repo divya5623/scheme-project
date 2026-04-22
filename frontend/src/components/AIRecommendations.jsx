@@ -60,8 +60,9 @@ export default function AIRecommendations({ aiAnalysis }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {alternatives.map((alt, i) => (
               <div key={i} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-                <p className="font-medium text-gray-800 text-sm">{alt.schemeName || alt.name || alt}</p>
+                <p className="font-medium text-gray-800 text-sm">{alt.schemeName || alt.name || alt.schemeId || alt}</p>
                 {alt.reason && <p className="text-xs text-gray-500 mt-1">{alt.reason}</p>}
+                {alt.suggestion && <p className="text-xs text-blue-600 mt-1 font-medium">{alt.suggestion}</p>}
               </div>
             ))}
           </div>
@@ -109,7 +110,7 @@ function RecommendationCard({ rec, index }) {
     <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
       <div className="flex items-start justify-between gap-3 mb-2">
         <h5 className="font-semibold text-gray-800 text-sm flex-1">
-          {index + 1}. {rec.schemeName || rec.name || 'Scheme'}
+          {index + 1}. {rec.schemeName || rec.name || rec.schemeId || 'Scheme'}
         </h5>
         {priority && (
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0 ${priorityStyle}`}>

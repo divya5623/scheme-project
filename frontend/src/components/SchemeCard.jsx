@@ -1,16 +1,20 @@
 import { useState } from 'react'
 import ApplicationGuide from './ApplicationGuide'
 
-export default function SchemeCard({ scheme, type }) {
+export default function SchemeCard({ schemeData, type }) {
   const [showGuide, setShowGuide] = useState(false)
   const isEligible = type === 'eligible'
 
-  const score = scheme.eligibilityResult?.score ?? scheme.score ?? 0
+  // schemeData is { scheme: {...}, eligibilityResult: {...} }
+  const scheme = schemeData?.scheme || schemeData || {}
+  const eligibilityResult = schemeData?.eligibilityResult || {}
+
+  const score = eligibilityResult?.score ?? 0
   const scorePercent = Math.round(score)
-  const reasons = scheme.eligibilityResult?.reasons || scheme.reasons || []
-  const missingCriteria = scheme.eligibilityResult?.missingCriteria || scheme.missingCriteria || []
+  const reasons = eligibilityResult?.reasons || []
+  const missingCriteria = eligibilityResult?.missingCriteria || []
   const benefits = scheme.benefits || []
-  const ministry = scheme.ministry || scheme.department || ''
+  const ministry = scheme.ministry || ''
 
   const scoreColor =
     scorePercent >= 80 ? 'bg-green-500' :
@@ -24,7 +28,7 @@ export default function SchemeCard({ scheme, type }) {
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <h4 className="text-white font-bold text-base leading-tight line-clamp-2">
-              {scheme.schemeName || scheme.name || 'Unknown Scheme'}
+              {scheme.name || 'Unknown Scheme'}
             </h4>
             {ministry && (
               <span className="inline-block mt-1.5 bg-white/20 text-white text-xs px-2 py-0.5 rounded-full">

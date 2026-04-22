@@ -32,8 +32,8 @@ export default function ResultsPanel({ schemes, type }) {
       </div>
 
       {/* Cards */}
-      {schemes.map((scheme, idx) => (
-        <SchemeCard key={scheme.id || scheme.schemeId || idx} scheme={scheme} type={type} />
+      {schemes.map((schemeData, idx) => (
+        <SchemeCard key={schemeData?.scheme?.id || idx} schemeData={schemeData} type={type} />
       ))}
     </div>
   )
